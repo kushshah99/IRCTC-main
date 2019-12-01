@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+
+
+{% endblock %}
+
+{% block title %}IRCTC{% endblock %}
+
+
+{% block body %}
+    <div class="w3-display-middle" style="width:50%;">
+        <div class="w3-bar w3-black">
+            <p class="w3-bar-item tablink"><i
+                        class="fa fa-train w3-margin-right"></i>Book
+            </p>
+            
+            <form class="searchForm" action="{% url 'book:search' %}" method="post" onsubmit=submitSearchForm()>
+                {% csrf_token %}
+                <input class="w3-black w3-bar-item dateInput"  type="date" name="journey_date" style="float: right; width: 25%; height: 25px;"  required>
+        </div>
+
+        <!-- Tabs -->
+        <div id="Search" class="w3-container w3-light-grey w3-padding-16 myLink" style="height:225px;">
+                <div class="w3-row-padding" style="margin:0 -16px;">
+                    <div class="w3">
+                        <label style="color:black;">From</label>
+                        <!--<input class="w3-input w3-border" type="text" placeholder="Departing from" name="source">-->
+                        <input class="w3-input w3-border sourceInput" list="sources" name="source" required>
+                          <datalist id="sources">
+                              {% for s in stations %}
+                              <option value="{{ s.pk }}">{{ s }}</option>
+                              {% endfor %}
+                          </datalist>
+                    </div>
+                    <div class="w3">
+                        <label style="color:black;">To</label>
+                        <!--<input class="w3-input w3-border" type="text" placeholder="Arriving at" name="dest">-->
+                        <input class="w3-input w3-border" list="destinations" name="dest" required>
+                          <datalist id="destinations">
+                            {% for s in stations %}
+                                <option value="{{ s.pk }}">{{ s }}</option>
+                            {% endfor %}
+                          </datalist>
+                    </div>
+                </div>
+                <p>
+                    <input class="w3-button w3-dark-grey" style="margin:20px" type="submit" value="Search Trains">
+                </p>
+            </form>
+        </div>
+
+        
+
+    </div>
+{% endblock %}
+
+{% block end-scripts %}
+
+<script>
+    $(".dateInput").focus();
+
+    function submitSearchForm()
+    {
+        <!--event.preventDefault();-->
+        searchform = $(".searchForm")[0];
+        console.log(searchform["source"]);
+        searchForm.submit();
+    }
+
+    var source;
+    var dest;
+
+    // Tabs
+    function openLink(evt, linkName) {
+        var i, x, tablinks;
+        x = document.getElementsByClassName("myLink");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+        }
+        document.getElementById(linkName).style.display = "block";
+        evt.currentTarget.className += " w3-red";
+    }
+
+    // Click on the first tablink on load
+    document.getElementsByClassName("tablink")[0].click();
+
+
+</script>
+{% endblock %}
